@@ -3,7 +3,7 @@ import cv2
 # 画像読み込み
 path = "test.jpg"
 img = cv2.imread(path)
-
+print("sss")
 #re_img = cv2.resize(img, dsize=(700, 700))
 
 cv2.imshow("pic",img)
