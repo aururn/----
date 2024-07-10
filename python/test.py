@@ -1,17 +1,17 @@
 import cv2
 
 # 画像読み込み
-path = r"C:\Users\Aurum\Documents\img\test.jpg"
-img = cv2.imread(path)
+path = r"C:\Users\Aurum\Documents\img\c.png"
+original = cv2.imread(path)
 
-#re_img = cv2.resize(img, dsize=(700, 700))
+img = cv2.resize(original, dsize=(700, 700))
 cv2.imshow("pic",img)
 
 # グレイスケール
 img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 # 白黒に変換
-ret, thresh = cv2.threshold(img_gray, 0, 255, cv2.THRESH_OTSU)
+ret, thresh = cv2.threshold(img_gray, 75, 255, cv2.THRESH_BINARY)
 
 #閾値がいくつになったか確認
 print("ret1: {}".format(ret))
@@ -27,3 +27,4 @@ cv2.imshow("contour",img)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
+
