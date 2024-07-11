@@ -48,29 +48,23 @@ def dilation(im_er):
     dilation = cv2.dilate(im_er,kernel,iterations = 2)
     return dilation
 
-
 def invert(im_er):
     return cv2.bitwise_not(im_er)
 
 def main():
-    # 画像読み込み
     path = __Path()
-    img = cv2.imread(path,0) # 引数0:グレイスケール
+    img = cv2.imread(path,0)
 
-    im_th = binary(img) # 二値化画像
-    im_fl = fillhole(im_th) # 穴埋め画像
-    im_er = erode(im_fl) # 穴埋め画像の縮小
-    im_dl = dilation(im_er) # 縮小画像の拡大 (ベットを削除)
-    im_inv = invert(im_th) # 二値化画像の反転
-
-    im_and = cv2.bitwise_and(im_inv, im_dl) # 反転画像と拡大画像でAND処理
-
+    im_th = binary(img)
+    im_fl = fillhole(im_th)
+    im_er = erode(im_fl)
+    im_dl = dilation(im_er)
     # RGBに拡張
-    #binary_image_colored = cv2.cvtColor(im_and, cv2.COLOR_GRAY2BGR)
-    im_min = cv2.min(img, im_and) # 元画像とAND処理画像の最小値
+    # binary_image_colored = cv2.cvtColor(im_dl, cv2.COLOR_GRAY2BGR)
+    im_min = cv2.min(img, im_dl)
 
-    titles = ['Original','Binary','FillHole','Erode','Dilation','And']
-    images = [img, im_th, im_fl, im_er, im_dl, im_and]
+    titles = ['Original','Binary','Fillhole','Erode','Dilation','Result']
+    images = [img, im_th, im_fl, im_er, im_dl, im_min]
 
     n = len(titles)
     row = 2 # 列
