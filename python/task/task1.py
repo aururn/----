@@ -25,13 +25,25 @@ def fillHole(img):
     mask = np.zeros((h+2, w+2), np.uint8)
 
     # 穴埋め
-    cv2.floodFill(img_floodfill, mask, (0,0), 255);
+    cv2.floodFill(img_floodfill, mask, (0,0), 255)
+    cv2.floodFill(img_floodfill, mask, (0,511), 255)
+    cv2.floodFill(img_floodfill, mask, (511,0), 255)
+    cv2.floodFill(img_floodfill, mask, (511,511), 255)
 
     # 反転処理
     img_floodfill_inv = invert(img_floodfill)
     img_out = or_(img,img_floodfill_inv)
 
     return img_out
+
+
+    """""
+    contours,_ = cv2.findContours(img,1,2)
+    fillHole = np.zeros(img.shape, dtype="uint8")
+    for p in contours:
+        cv2.fillPoly(fillHole,[p],(255,255,255))
+    return fillHole
+    """
 
 # 画像縮小処理
 def erode(img):
@@ -88,5 +100,6 @@ if __name__ == "__main__":
     main()
 
 """
-references : https://learnopencv.com/filling-holes-in-an-image-using-opencv-python-c/
+references: https://learnopencv.com/filling-holes-in-an-image-using-opencv-python-c/
+            https://ni4muraano.hatenablog.com/entry/2017/03/30/000030
 """

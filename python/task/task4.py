@@ -3,9 +3,10 @@ import numpy as np
 import os, tkinter, tkinter.filedialog
 import pathlib
 import glob
+from matplotlib import pyplot as plt
 
 # 画像ファイルpathを取得
-def Path():
+def Path_():
     return tkinter.filedialog.askdirectory()
 
 # 二値化処理
@@ -27,13 +28,25 @@ def fillhole(img):
     mask = np.zeros((h+2, w+2), np.uint8)
 
     # 穴埋め
-    cv2.floodFill(img_floodfill, mask, (0,0), 255);
+    cv2.floodFill(img_floodfill, mask, (0,0), 255)
+    cv2.floodFill(img_floodfill, mask, (0,511), 255)
+    cv2.floodFill(img_floodfill, mask, (511,0), 255)
+    cv2.floodFill(img_floodfill, mask, (511,511), 255)
 
     # 反転処理
     img_floodfill_inv = invert(img_floodfill)
     img_out = or_(img,img_floodfill_inv)
 
     return img_out
+
+
+    """""
+    contours,_ = cv2.findContours(img,1,2)
+    fillHole = np.zeros(img.shape, dtype="uint8")
+    for p in contours:
+        cv2.fillPoly(fillHole,[p],(255,255,255))
+    return fillHole
+    """
 
 # 画像縮小処理
 def erode(img):
@@ -72,12 +85,13 @@ def mkFile(img_file_name,Result):
 
 def main():
     # 画像リスト取得
-    file_dir = Path()
+    file_dir = Path_()
     img_list = list(pathlib.Path(file_dir).glob('**/*.jpg'))
 
     for i in range(len(img_list)):
         img_dir = str(img_list[i]) # 画像Path
         img = cv2.imread(img_dir,0) # 第２引数0でグレイスケール
+        print(img.shape)
 
         # 処理
         img_th = binary(img) # 二値化
@@ -89,6 +103,9 @@ def main():
 
         Result = min_(img, img_and) # 元画像とAND処理画像の最小値
 
+        cv2.imshow("Result",Result)
+        cv2.waitKey(300)
+        cv2.destroyAllWindows()
         img_file_name = os.path.basename(img_dir) # 画像ファイル名取得
         mkFile(img_file_name,Result)
 
@@ -97,4 +114,13 @@ if __name__ == "__main__":
 
 """
 reference : https://learnopencv.com/filling-holes-in-an-image-using-opencv-python-c/
+titles = ['Original Image','BINARY','BINARY_fl','er','dl','inv','and','result']
+        images = [img, img_th, img_fl, img_er, img_dl, img_inv,img_and,Result]
+
+        for i in range(8):
+            plt.subplot(3,3,i+1),plt.imshow(images[i],'gray')
+            plt.title(titles[i])
+            plt.xticks([]),plt.yticks([])
+        plt.show()
+
 """
