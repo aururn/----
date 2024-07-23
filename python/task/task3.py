@@ -3,7 +3,7 @@ import numpy as np
 import os, tkinter, tkinter.filedialog, tkinter.messagebox
 
 # 画像ファイル取得
-def Path():
+def Path_():
     return tkinter.filedialog.askopenfilename()
 
 # 二値化処理
@@ -25,13 +25,25 @@ def fillhole(img):
     mask = np.zeros((h+2, w+2), np.uint8)
 
     # 穴埋め
+    # print(img.shape) -> (512,512)
     cv2.floodFill(img_floodfill, mask, (0,0), 255);
+    cv2.floodFill(img_floodfill, mask, (0,511), 255);
+    cv2.floodFill(img_floodfill, mask, (511,0), 255);
+    cv2.floodFill(img_floodfill, mask, (511,511), 255);
 
     # 反転処理
     img_floodfill_inv = invert(img_floodfill)
     img_out = or_(img,img_floodfill_inv)
 
     return img_out
+
+    """""
+    contours,_ = cv2.findContours(img,1,2)
+    fillHole = np.zeros(img.shape, dtype="uint8")
+    for p in contours:
+        cv2.fillPoly(fillHole,[p],(255,255,255))
+    return fillHole
+    """
 
 # 画像縮小処理
 def erode(img):
@@ -71,7 +83,7 @@ def mkFile(Result):
 
 def main():
     # 画像読み込み
-    path = Path()
+    path = Path_()
     img = cv2.imread(path,0) # 引数0:グレイスケール
 
     # 処理

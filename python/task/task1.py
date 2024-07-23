@@ -3,7 +3,7 @@ import numpy as np
 import os, tkinter, tkinter.filedialog
 
 # 画像ファイル取得
-def Path():
+def Path_():
     return tkinter.filedialog.askopenfilename()
 
 # 二値化処理
@@ -25,17 +25,17 @@ def fillHole(img):
     mask = np.zeros((h+2, w+2), np.uint8)
 
     # 穴埋め
-    cv2.floodFill(img_floodfill, mask, (0,0), 255)
-    cv2.floodFill(img_floodfill, mask, (0,511), 255)
-    cv2.floodFill(img_floodfill, mask, (511,0), 255)
-    cv2.floodFill(img_floodfill, mask, (511,511), 255)
+    # print(img.shape) -> (512,512)
+    cv2.floodFill(img_floodfill, mask, (0,0), 255);
+    cv2.floodFill(img_floodfill, mask, (0,511), 255);
+    cv2.floodFill(img_floodfill, mask, (511,0), 255);
+    cv2.floodFill(img_floodfill, mask, (511,511), 255);
 
     # 反転処理
     img_floodfill_inv = invert(img_floodfill)
     img_out = or_(img,img_floodfill_inv)
 
     return img_out
-
 
     """""
     contours,_ = cv2.findContours(img,1,2)
@@ -83,7 +83,7 @@ def mkFile(Result):
 
 def main():
     # 画像取得
-    img_path = Path()
+    img_path = Path_()
     img = cv2.imread(img_path,0)
 
     # 処理
@@ -100,6 +100,5 @@ if __name__ == "__main__":
     main()
 
 """
-references: https://learnopencv.com/filling-holes-in-an-image-using-opencv-python-c/
-            https://ni4muraano.hatenablog.com/entry/2017/03/30/000030
+references : https://learnopencv.com/filling-holes-in-an-image-using-opencv-python-c/
 """

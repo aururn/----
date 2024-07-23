@@ -3,10 +3,9 @@ import numpy as np
 import os, tkinter, tkinter.filedialog
 import pathlib
 import glob
-from matplotlib import pyplot as plt
 
 # 画像ファイルpathを取得
-def Path():
+def Path_():
     return tkinter.filedialog.askdirectory()
 
 # 二値化処理
@@ -28,17 +27,17 @@ def fillHole(img):
     mask = np.zeros((h+2, w+2), np.uint8)
 
     # 穴埋め
-    cv2.floodFill(img_floodfill, mask, (0,0), 255)
-    cv2.floodFill(img_floodfill, mask, (0,511), 255)
-    cv2.floodFill(img_floodfill, mask, (511,0), 255)
-    cv2.floodFill(img_floodfill, mask, (511,511), 255)
+    # print(img.shape) -> (512,512)
+    cv2.floodFill(img_floodfill, mask, (0,0), 255);
+    cv2.floodFill(img_floodfill, mask, (0,511), 255);
+    cv2.floodFill(img_floodfill, mask, (511,0), 255);
+    cv2.floodFill(img_floodfill, mask, (511,511), 255);
 
     # 反転処理
     img_floodfill_inv = invert(img_floodfill)
     img_out = or_(img,img_floodfill_inv)
 
     return img_out
-
 
     """""
     contours,_ = cv2.findContours(img,1,2)
@@ -85,7 +84,7 @@ def mkFile(img_file_name,Result):
 
 def main():
     # 画像リスト取得
-    file_dir = Path()
+    file_dir = Path_()
     img_list = list(pathlib.Path(file_dir).glob('**/*.jpg'))
 
     for i in range(len(img_list)):
@@ -99,20 +98,6 @@ def main():
         img_dl = dilation(img_er) # 拡大
 
         Result = min_(img, img_dl) # 元画像と最小化処理
-        """""
-        titles = ['Original Image','BINARY','BINARY_fl','er','dl','result']
-        images = [img, img_th, img_fl, img_er, img_dl, Result]
-
-        for i in range(6):
-            plt.subplot(2,3,i+1),plt.imshow(images[i],'gray')
-            plt.title(titles[i])
-            plt.xticks([]),plt.yticks([])
-        plt.show()
-        """
-
-        cv2.imshow("Result",Result)
-        cv2.waitKey(300)
-        cv2.destroyAllWindows()
 
         img_file_name = os.path.basename(img_dir) # 画像ファイル名取得s
         mkFile(img_file_name,Result)

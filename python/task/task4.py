@@ -28,17 +28,17 @@ def fillhole(img):
     mask = np.zeros((h+2, w+2), np.uint8)
 
     # 穴埋め
-    cv2.floodFill(img_floodfill, mask, (0,0), 255)
-    cv2.floodFill(img_floodfill, mask, (0,511), 255)
-    cv2.floodFill(img_floodfill, mask, (511,0), 255)
-    cv2.floodFill(img_floodfill, mask, (511,511), 255)
+    # print(img.shape) -> (512,512)
+    cv2.floodFill(img_floodfill, mask, (0,0), 255);
+    cv2.floodFill(img_floodfill, mask, (0,511), 255);
+    cv2.floodFill(img_floodfill, mask, (511,0), 255);
+    cv2.floodFill(img_floodfill, mask, (511,511), 255);
 
     # 反転処理
     img_floodfill_inv = invert(img_floodfill)
     img_out = or_(img,img_floodfill_inv)
 
     return img_out
-
 
     """""
     contours,_ = cv2.findContours(img,1,2)
